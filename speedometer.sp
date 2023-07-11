@@ -31,12 +31,11 @@ public Action ToggleSpeedometer(int client, int args)
         return Plugin_Handled;
     }
     
-    
     g_bIsEnabled[client] = !g_bIsEnabled[client];
-    if (g_bIsEnabled[client] && g_bIsPlayerAlive[client]) 
+    if (g_bIsEnabled[client] && IsPlayerAlive(client)) 
     {
-        g_hSpeedometerTimer[client] = CreateTimer(0.1, Speedometer_Timer, client, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
         ReplyToCommand(client, "[SM]: The speedometer has been enabled");
+        g_hSpeedometerTimer[client] = CreateTimer(0.1, Speedometer_Timer, client, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
     }
     else if (!g_bIsEnabled[client]) 
     {
@@ -75,7 +74,6 @@ public Action Event_OnPlayerDeath(Event event, const char[] name, bool dontBroad
  */
 public Action Event_OnPlayerSpawn(Event event, const char[] name, bool dontBroadcast)
 {
-    PrintToChatAll("Player Spawned");
     int client = GetClientOfUserId(GetEventInt(event, "userid"));
     if (g_bIsEnabled[client] && IsPlayerAlive(client))
     {
@@ -137,7 +135,6 @@ public Action Speedometer_Timer(Handle timer, any client)
 
 public void onClientDisconnect(int client)
 {
-    g_bIsPlayerAlive[client] = false;
     g_bIsEnabled[client] = false;
     delete g_hSpeedometerTimer[client];
     delete g_hMessageHandles[client];
