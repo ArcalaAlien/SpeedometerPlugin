@@ -1,13 +1,9 @@
 #include<sourcemod>
-#include<sdktools_sound>
-
 
 bool g_bIsEnabled[MAXPLAYERS+1] = { true, ... };
 bool g_bIsPlayerAlive[MAXPLAYERS+1];
 Handle g_hSpeedometerTimer[MAXPLAYERS+1];
 Handle g_hMessageHandles[MAXPLAYERS+1];
-
-
 
 public Plugin:myinfo =
 {
@@ -35,51 +31,27 @@ public Action ToggleSpeedometer(int client, int args)
         return Plugin_Handled;
     }
     
-
     
     g_bIsEnabled[client] = !g_bIsEnabled[client];
-
-
-
     if (g_bIsEnabled[client] && g_bIsPlayerAlive[client]) 
     {
         g_hSpeedometerTimer[client] = CreateTimer(0.1, Speedometer_Timer, client, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
         ReplyToCommand(client, "[SM]: The speedometer has been enabled");
-
     }
     else if (!g_bIsEnabled[client]) 
     {
-
         delete g_hSpeedometerTimer[client];
-
-
-
         ReplyToCommand(client, "[SM]: The speedometer has been disabled");
     }
-
-    // if (!g_bIsEnabled[client]) {
-    //     g_bIsEnabled[client] = true;
-    //     if (g_bIsPlayerAlive[client]) {
-    //         g_hSpeedometerTimer[client] = CreateTimer(0.1, Speedometer_Timer, client, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
-    //     }
-    //     ReplyToCommand(client, "[SM]: The speedometer has been enabled");
-    // }
-    // else if (g_bIsEnabled[client]) {
-    //     g_bIsEnabled[client] = false;
-    //     delete g_hSpeedometerTimer[client];
-    //     ReplyToCommand(client, "[SM]: The speedometer has been disabled");
-    // }
-
     return Plugin_Handled;
 }
-
 
 /**
  * @brief Event_OnPlayerDeath
  * 
  * @param event Event identifier for the event
- * @param name N???
- * @param dontBroadcast
+ * @param name Name of event
+ * @param dontBroadcast 
  */
 public Action Event_OnPlayerDeath(Event event, const char[] name, bool dontBroadcast)
 {
@@ -132,18 +104,13 @@ public Action Event_OnPlayerTeam(Event event, const char[] name, bool dontBroadc
     return Plugin_Continue;
 }
 
-
-
 public Action Speedometer_Timer(Handle timer, any client)
 {
-
-    // false 
     if (g_bIsPlayerAlive[client] || g_bIsEnabled[client])
     {
         // Thanks to TheTwistedPanda for this code:
         float _fTemp[3];
         float _fVelocity;
-
         //get proper vector and calculate velocity
         GetEntPropVector(client, Prop_Data, "m_vecVelocity", _fTemp);
         for(new i = 0; i <= 2; i++)
@@ -159,9 +126,6 @@ public Action Speedometer_Timer(Handle timer, any client)
         BfWriteByte(g_hMessageHandles[client], client); 
         BfWriteString(g_hMessageHandles[client], sBuffer); 
         EndMessage();
-
-
-
         return Plugin_Continue;
     }
     else if (!g_bIsPlayerAlive[client] || !g_bIsEnabled[client] || !IsClientConnected(client))
