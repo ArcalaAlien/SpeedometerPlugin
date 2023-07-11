@@ -53,7 +53,7 @@ public Action ToggleSpeedometer(int client, int args)
         delete g_hSpeedometerTimer[client];
 
 
-        // delete g_hMessageHandles[client];
+
         ReplyToCommand(client, "[SM]: The speedometer has been disabled");
     }
 
