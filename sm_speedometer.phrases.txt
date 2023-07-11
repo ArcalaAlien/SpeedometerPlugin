@@ -1,0 +1,8 @@
+"Phrases"
+{
+	"SPEEDOMETER_VELOCITY"
+	{
+		"#format"	"{1:.3f}"
+		"en"		"Current Speed: {1}"	
+	}
+}
